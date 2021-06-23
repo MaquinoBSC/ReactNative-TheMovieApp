@@ -1,6 +1,8 @@
 import React from 'react';
 import {SafeAreaView, Text} from 'react-native';
 import {Provider as PaperProvider, Button} from 'react-native-paper';
+import {NavigationContainer} from '@react-navigation/native';
+import Navigation from './src/navigation/Navigation';
 
 export default function App(){
 
@@ -9,17 +11,9 @@ export default function App(){
 
   return(
     <PaperProvider>
-      <SafeAreaView>
-        <Text>Hola</Text>
-        <Button 
-          loading={loading} 
-          icon="fingerprint" 
-          mode="contained" 
-          onPress={()=> console.log("Presionado")}
-        >
-          Press Me
-        </Button>
-      </SafeAreaView>
+      <NavigationContainer>
+        <Navigation />
+      </NavigationContainer>
     </PaperProvider>
   )
 }
