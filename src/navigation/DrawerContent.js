@@ -8,8 +8,7 @@ export default function DrawerContent(props){
     const {navigation}= props;
     const [active, setActive]= useState("home");
 
-    const data= usePreferences();
-    console.log(data);
+    const {theme, toggleTheme}= usePreferences();
 
     const onChangeScreen= (screen)=> {
         setActive(screen);
@@ -35,10 +34,27 @@ export default function DrawerContent(props){
                     onPress={()=> onChangeScreen('news')} 
                 />
             </Drawer.Section>
+            <Drawer.Section title="Opciones">
+                <TouchableRipple>
+                    <View style={styles.preferences}>
+                        <Text>Tema Oscuro</Text>
+                        <Switch 
+                            value={theme === 'dark' ? true : false} 
+                            onValueChange={()=> toggleTheme()}
+                        />
+                    </View>
+                </TouchableRipple>
+            </Drawer.Section>
         </DrawerContentScrollView>
     )
 }
 
 const styles= StyleSheet.create({
-
+    preferences: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingVertical: 12,
+        paddingHorizontal: 16,
+    }
 })
