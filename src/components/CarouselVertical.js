@@ -29,7 +29,6 @@ function RenderItem(props){
     const navigation= useNavigation();
     const { data }= props;
     const { title, poster_path, genre_ids, id }= data.item;
-    console.log(data.item);
     const imageUrl= `${BASE_PATH_IMG}/w500/${poster_path}`;
 
     const [genres, setGenres]= useState(null);

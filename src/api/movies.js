@@ -30,3 +30,14 @@ export function getGeneroMovieApi(idGenres){
             return arrayGenres;
         });
 }
+
+
+export function getAllGenresApi(){
+    const url= `${API_HOST}/genre/movie/list?api_key=${API_KEY}&language=${LANG}`
+
+    return fetch(url).then((response)=> {
+        return response.json()
+    }).then((result)=> {
+        return result;
+    })
+}
