@@ -1,13 +1,15 @@
 import React, {useState, useEffect} from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { Title } from 'react-native-paper';
+import { map } from 'lodash';
 import CarouselVertical from '../components/CarouselVertical';
 import { getNewsMoviesApi, getAllGenresApi } from '../api/movies';
 
 
 export default function Home(){
     const [newMovies, setNewMovies]= useState(null);
-    const [genreMovies, setGenreMovies]= useState(null);
+    const [genresList, setGenresList]= useState([]);
+    const [genreSelected, setGenreSelected]= useState(28);
 
 
     useEffect(async() => {
@@ -17,8 +19,13 @@ export default function Home(){
 
     useEffect(async() => {
         const response= await getAllGenresApi();
-        setGenreMovies(response);
+        setGenresList(response.genres);
     }, []);
+
+
+    const onChangeGenre= (newGenreId)=> {
+        setGenreSelected(newGenreId);
+    }
 
     return(
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -33,6 +40,19 @@ export default function Home(){
 
             <View style={styles.genres}>
                 <Title style={styles.genresTitle}>Peliculas por genero</Title>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.genreList}>
+                    {
+                        map(genresList, (genre)=> (
+                            <Text 
+                                key={genre.id} 
+                                style={[styles.genre, {color: genre.id !== genreSelected ? "#8697a5" : "#fff"}]}
+                                onPress={()=> onChangeGenre(genre.id)}    
+                                >
+                                { genre.name }
+                            </Text>
+                        ))
+                    }
+                </ScrollView>
             </View>
         </ScrollView>
     )
@@ -57,5 +77,15 @@ const styles= StyleSheet.create({
         marginHorizontal: 20,
         fontWeight: 'bold',
         fontSize: 22,
+    },
+    genreList: {
+        marginTop: 5,
+        marginBottom: 15,
+        paddingHorizontal: 20,
+        padding: 10
+    },
+    genre: {
+        marginRight: 20,
+        fontSize: 16
     }
 });
