@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Image, Dimensions, TouchableWithoutFeedback } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import { Text, Title } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
 import { map, size } from 'lodash';
 import { BASE_PATH_IMG } from '../utils/constants';
 import { getGeneroMovieApi } from '../api/movies';
@@ -25,8 +26,10 @@ export default function CarouselVertical(props){
 }
 
 function RenderItem(props){
+    const navigation= useNavigation();
     const { data }= props;
-    const { title, poster_path, genre_ids }= data.item;
+    const { title, poster_path, genre_ids, id }= data.item;
+    console.log(data.item);
     const imageUrl= `${BASE_PATH_IMG}/w500/${poster_path}`;
 
     const [genres, setGenres]= useState(null);
@@ -35,10 +38,15 @@ function RenderItem(props){
         getGeneroMovieApi(genre_ids).then((response)=> {
             setGenres(response);
         });
-    }, [])
+    }, []);
+
+
+    const onNavigation= ()=> {
+        navigation.navigate('movie', { id });
+    };
 
     return (
-        <TouchableWithoutFeedback>
+        <TouchableWithoutFeedback onPress={()=> onNavigation() }>
             <View style={styles.card}>
                 <Image style={styles.image} source={{uri: imageUrl}} />
                 <Title style={styles.title}>{ title }</Title>
