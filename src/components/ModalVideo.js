@@ -1,17 +1,32 @@
-import React from 'react';
+import React, {useState, useEffect } from 'react';
 import { StyleSheet} from 'react-native';
 import { Modal, IconButton, Title } from 'react-native-paper';
+import Youtube from 'react-native-youtube';
+import { getVideoMovieApi } from '../api/movies';
 
 
 export default function ModalVideo(props){
-    const { show, setShow }= props;
+    const { show, setShow, idMovie }= props;
+    const [video, setVideo]= useState(null);
+    console.log(video);
+
+    useEffect(()=> {
+        getVideoMovieApi(idMovie).then((response)=> {
+            let idVideo= '';
+
+            response.results.forEach((video)=> {
+                if(video.site=== 'YouTube' && !idVideo){
+                    idVideo= video.key;
+                }
+            });
+            setVideo(idVideo);
+        });
+    }, []);
 
 
     return (
         <Modal visible={show} contentContainerStyle={styles.modal}>
-            <Title>
-                Hola Modal
-            </Title>
+            <Youtube videoId={video} style={styles.video} />
             <IconButton icon="close" style={styles.close} onPress={ ()=> setShow(false) } />
         </Modal>
     )
@@ -30,5 +45,9 @@ const styles= StyleSheet.create({
         borderRadius: 100,
         position: 'absolute',
         bottom: 100,
+    },
+    video: {
+        alignSelf: 'stretch',
+        height: 300,
     }
 })

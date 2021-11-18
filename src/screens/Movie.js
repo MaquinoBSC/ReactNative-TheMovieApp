@@ -24,7 +24,7 @@ export default function Movie(){
                 <MovieImage posterPath={movie.poster_path} />
                 <MovieTrailer setShow={setShowVideo} />
             </ScrollView>
-            <ModalVideo show={showVideo} setShow={setShowVideo} />
+            <ModalVideo show={showVideo} setShow={setShowVideo} idMovie={id} />
         </>
     )
 }
