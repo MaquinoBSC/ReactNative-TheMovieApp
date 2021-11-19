@@ -26,11 +26,13 @@ export default function Movie(){
 
     return(
         <>
-            <ScrollView>
+            <ScrollView showsVerticalScrollIndicator={false}>
                 <MovieImage posterPath={movie.poster_path} />
                 <MovieTrailer setShow={setShowVideo} />
                 <MovieTitle movie={movie} />
                 <MovieRating voteCount={movie.vote_count} voteAverage={movie.vote_average} />
+                <Text style={styles.overview}>{ movie.overview }</Text>
+                <Text style={[styles.overview, {marginBottom: 20}]}>Fecha de lanzamiento: { movie.release_date }</Text>
             </ScrollView>
             <ModalVideo show={showVideo} setShow={setShowVideo} idMovie={id} />
         </>
@@ -147,5 +149,11 @@ const styles= StyleSheet.create({
         marginTop: 10,
         flexDirection: 'row',
         alignItems: 'center',
+    },
+    overview: {
+        marginHorizontal: 30,
+        marginTop: 20,
+        textAlign: 'justify',
+        color: '#8697a5'
     }
 })
