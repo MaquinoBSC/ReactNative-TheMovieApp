@@ -1,7 +1,8 @@
 import React, {useState, useEffect } from 'react';
-import { StyleSheet} from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { Modal, IconButton, Title } from 'react-native-paper';
 import Youtube from 'react-native-youtube';
+import { WebView } from 'react-native-webview';
 import { getVideoMovieApi } from '../api/movies';
 
 
@@ -26,7 +27,14 @@ export default function ModalVideo(props){
 
     return (
         <Modal visible={show} contentContainerStyle={styles.modal}>
-            <Youtube videoId={video} style={styles.video} />
+            {
+                Platform.OS == 'ios' ? (
+                    <Youtube videoId={video} style={styles.video} />
+                    ) : (
+                    // <Youtube videoId={video} style={styles.video} apiKey="961810363999-h8j43og304bvdd8kri5nhtrdpvvv3plc.apps.googleusercontent.com" />
+                    <WebView style={{ width: 500}} source={{ uri: `https://www.youtube.com/embed/${video}?controls=0&showinfo=0`}} />
+                )
+            }
             <IconButton icon="close" style={styles.close} onPress={ ()=> setShow(false) } />
         </Modal>
     )
