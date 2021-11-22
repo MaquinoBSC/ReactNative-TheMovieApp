@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {View, StyleSheet, ScrollView, Image } from 'react-native';
-import { Text, Title } from 'react-native-paper';
+import { Text, Title, Button } from 'react-native-paper';
 import { Rating } from 'react-native-ratings';
 import { map } from 'lodash';
 import { useNavigation } from '@react-navigation/native';
@@ -15,13 +15,26 @@ import starLight from '../assets/png/starLight.png';
 export default function Popular(){
     const navigation= useNavigation();
     const [movies, setMovies]= useState(null);
+    const [showBtnMore, setShowBtnMore]= useState(true);
+    const [page, setPage]= useState(1);
     const { theme }= usePreferences();
 
     useEffect(()=> {
-        getPopularMovieApi(1).then((response)=> {
-            setMovies(response.results);
+        getPopularMovieApi(page).then((response)=> {
+            const totalPage= response.total_pages;
+            if(page < totalPage){
+                if(!movies){
+                    setMovies(response.results);
+                }
+                else{
+                    setMovies([... movies, ...response.results]);
+                }
+            }
+            else{
+                setShowBtnMore(false);
+            }
         })
-    }, []);
+    }, [page]);
 
     return(
         <ScrollView>
@@ -29,6 +42,17 @@ export default function Popular(){
                 map(movies, (movie, index)=> (
                     <Movie key={index} movie={movie} theme={theme} />
                 ))
+            }
+            {
+                showBtnMore && (
+                    <Button 
+                        mode="contained"
+                        contentStyle={styles.loadMoreContainer}
+                        style={styles.loadMore}
+                        labelStyle={{ color: theme=== 'dark' ? '#fff' : '#000'}}
+                        onPress={()=> setPage(page + 1)}
+                    > Cargar mas ... </Button>
+                )
             }
         </ScrollView>
     )
@@ -97,5 +121,12 @@ const styles= StyleSheet.create({
         alignItems: 'flex-start',
         justifyContent: 'flex-start',
         marginTop: 10,
+    },
+    loadMoreContainer: {
+        paddingTop: 10,
+        paddingBottom: 20,
+    },
+    loadMore: {
+        backgroundColor: 'transparent'
     }
 });
