@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {View, StyleSheet, ScrollView, Image } from 'react-native';
+import {View, StyleSheet, ScrollView, Image, TouchableWithoutFeedback } from 'react-native';
 import { Text, Title, Button } from 'react-native-paper';
 import { Rating } from 'react-native-ratings';
 import { map } from 'lodash';
@@ -13,7 +13,6 @@ import starLight from '../assets/png/starLight.png';
 
 
 export default function Popular(){
-    const navigation= useNavigation();
     const [movies, setMovies]= useState(null);
     const [showBtnMore, setShowBtnMore]= useState(true);
     const [page, setPage]= useState(1);
@@ -61,24 +60,31 @@ export default function Popular(){
 
 function Movie(props){
     const { movie, theme }= props;
-    const { poster_path, title, release_date, vote_count, vote_average }= movie;
+    const { id, poster_path, title, release_date, vote_count, vote_average }= movie;
+    const navigation= useNavigation();
+
+    const goMovie= ()=> {
+        navigation.navigate('movie', { id })
+    }
 
     return (
-        <View style={styles.movie}>
-            <View style={styles.left}>
-                <Image 
-                    style={styles.image} 
-                    source={
-                        poster_path ? { uri: `${BASE_PATH_IMG}/w500${poster_path}` } : noImage
-                    } 
-                />
+        <TouchableWithoutFeedback onPress={()=> goMovie()}>
+            <View style={styles.movie}>
+                <View style={styles.left}>
+                    <Image 
+                        style={styles.image} 
+                        source={
+                            poster_path ? { uri: `${BASE_PATH_IMG}/w500${poster_path}` } : noImage
+                        } 
+                    />
+                </View>
+                <View>
+                    <Title numberOfLines={1}> { title } </Title>
+                    <Text> { release_date } </Text>
+                    <MovieRating voteCount={vote_count} voteAverage={vote_average} theme={theme} />
+                </View>
             </View>
-            <View>
-                <Title> { title } </Title>
-                <Text> { release_date } </Text>
-                <MovieRating voteCount={vote_count} voteAverage={vote_average} theme={theme} />
-            </View>
-        </View>
+        </TouchableWithoutFeedback>
     )
 }
 
@@ -112,10 +118,12 @@ const styles= StyleSheet.create({
     },
     left: {
         marginRight: 20,
+        marginLeft: 10,
     },
     image: {
         width: 100,
         height: 150,
+        borderRadius: 10,
     },
     viewRating: {
         alignItems: 'flex-start',
